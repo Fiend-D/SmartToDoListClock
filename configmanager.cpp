@@ -4,6 +4,7 @@
 #include <QJsonArray>
 #include <QStandardPaths>
 #include <QDir>
+#include <QDateTime>
 
 ConfigManager::ConfigManager(QObject *parent)
     : QObject(parent)
@@ -178,8 +179,7 @@ void ConfigManager::setStyle(const QString &styleNameOrId)
 
 bool ConfigManager::addCustomStyle(const QString &id, const QJsonObject &styleData)
 {
-    qDebug() << "保存自定义样式:" << id;
-    qDebug() << "包含字段:" << styleData.keys();
+    // 保存自定义样式
     QJsonObject styles = m_config["styles"].toObject();
     QString uniqueId = id;
     int counter = 1;
@@ -189,7 +189,7 @@ bool ConfigManager::addCustomStyle(const QString &id, const QJsonObject &styleDa
     
     styles[uniqueId] = styleData;
     m_config["styles"] = styles;
-    qDebug() << "保存后配置:" << QJsonDocument(m_config).toJson(QJsonDocument::Indented).left(500);
+    // 配置已保存
     m_styles[uniqueId] = loadStyleFromJson(styleData);
     m_config["currentStyle"] = uniqueId;
     m_currentStyle = m_styles[uniqueId];
@@ -301,5 +301,42 @@ QString ConfigManager::currentLayer() const
 void ConfigManager::setCurrentLayer(const QString &layer)
 {
     m_config["windowLayer"] = layer;
+    saveConfig();
+}
+
+bool ConfigManager::smartThemeEnabled() const
+{
+    return m_config["smartThemeEnabled"].toBool(true);
+}
+
+void ConfigManager::setSmartThemeEnabled(bool enabled)
+{
+    m_config["smartThemeEnabled"] = enabled;
+    saveConfig();
+}
+
+int ConfigManager::pomodoroCompletedToday() const
+{
+    QString today = QDateTime::currentDateTime().toString("yyyyMMdd");
+    QJsonObject pomodoroData = m_config["pomodoro"].toObject();
+    QString lastDate = pomodoroData["lastDate"].toString();
+    if (lastDate != today) return 0;
+    return pomodoroData["count"].toInt(0);
+}
+
+void ConfigManager::incrementPomodoroCount()
+{
+    QString today = QDateTime::currentDateTime().toString("yyyyMMdd");
+    QJsonObject pomodoroData = m_config["pomodoro"].toObject();
+    QString lastDate = pomodoroData["lastDate"].toString();
+
+    if (lastDate != today) {
+        pomodoroData["lastDate"] = today;
+        pomodoroData["count"] = 1;
+    } else {
+        pomodoroData["count"] = pomodoroData["count"].toInt(0) + 1;
+    }
+
+    m_config["pomodoro"] = pomodoroData;
     saveConfig();
 }

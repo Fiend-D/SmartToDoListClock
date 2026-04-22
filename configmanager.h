@@ -60,6 +60,12 @@ public:
     QString currentLayer() const;
     void setCurrentLayer(const QString &layer);
 
+    bool smartThemeEnabled() const;
+    void setSmartThemeEnabled(bool enabled);
+
+    int pomodoroCompletedToday() const;
+    void incrementPomodoroCount();
+
 private:
     void loadConfig();
     ClockStyle loadStyleFromJson(const QJsonObject &obj);

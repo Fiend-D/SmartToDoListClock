@@ -272,23 +272,26 @@ void AIQuoteService::generateClockStyle(const QString &userPrompt)
     // 智谱专用：简化提示词，避免复杂格式
     // 合并成一个完整的 prompt
     QString promptText = QString(
-        "设计一个时钟风格，返回JSON包含：\n"
-        "1. 基础样式（颜色、字体等）\n"
-        "2. 视觉特效脚本（粒子系统描述）\n\n"
+        "设计一个新拟态(Neumorphism)风格的时钟主题，返回JSON。\n"
+        "设计要求：\n"
+        "1. 背景色必须是偏暗的深色调（如深蓝灰#2d3748、深紫灰#2d2a38等），因为新拟态需要暗底才能展现立体感\n"
+        "2. 指针和文字颜色要有足够对比度，但不要过于刺眼，偏向柔和的高级感\n"
+        "3. 颜色搭配要和谐，主色+辅助色+点缀色的比例约为6:3:1\n"
+        "4. 支持发光效果(glowEffect=true)\n\n"
         "输出格式：\n"
         "{\n"
         "  \"name\": \"风格名\",\n"
         "  \"description\": \"描述\",\n"
-        "  \"backgroundColor\": \"#RRGGBB\",\n"
+        "  \"backgroundColor\": \"#2d3748(暗色示例)\",\n"
         "  \"hourHandColor\": \"#RRGGBB\",\n"
         "  \"minuteHandColor\": \"#RRGGBB\",\n"
         "  \"secondHandColor\": \"#RRGGBB\",\n"
         "  \"markColor\": \"#RRGGBB\",\n"
         "  \"textColor\": \"#RRGGBB\",\n"
         "  \"quoteColor\": \"#RRGGBB\",\n"
-        "  \"fontFamily\": \"字体名\",\n"
+        "  \"fontFamily\": \"Noto Sans CJK SC\",\n"
         "  \"isDigital\": false,\n"
-        "  \"bgAlpha\": 80,\n"
+        "  \"bgAlpha\": 85,\n"
         "  \"glowEffect\": true,\n"
         "  \"emotion\": \"energetic|sad|happy|calm\",\n"
         "  \"aiVisualScript\": \"{\\\"description\\\":\\\"...\\\",\\\"physics\\\":{\\\"gravity\\\":\\\"5\\\",\\\"wind_x\\\":\\\"sin(time*0.5)\\\",\\\"wind_y\\\":\\\"0\\\"},\\\"emitter\\\":{\\\"shape\\\":\\\"petal|snowflake|maple|ginkgo|circle|geometric\\\",\\\"max_count\\\":20},\\\"colors\\\":{\\\"primary\\\":\\\"#RRGGBB\\\",\\\"secondary\\\":\\\"#RRGGBB\\\"}}\"\n"
@@ -298,7 +301,7 @@ void AIQuoteService::generateClockStyle(const QString &userPrompt)
         "- physics: gravity重力, wind_x横向风力(可用sin/cos/time表达式), wind_y纵向风力\n"
         "- colors: primary主色, secondary副色\n\n"
         "风格要求：%1\n"
-        "注意：emotion必须是 energetic、sad、happy、calm 中的一个，不要其他值。"
+        "注意：emotion必须是 energetic、sad、happy、calm 中的一个。backgroundColor必须是深色系(#2d3748,#1a1a2e,#2d2a38等)"
     ).arg(userPrompt.isEmpty() ? "随机创意，根据当前季节或氛围自动生成" : userPrompt);
     if (!userPrompt.isEmpty()) {
         promptText = "基于以下要求生成：按照模板生成，不要返回多余的内容，对于emotion，('energetic' or 'sad' or 'happy' or 'calm'?select one!)" + userPrompt + "\n" + promptText;

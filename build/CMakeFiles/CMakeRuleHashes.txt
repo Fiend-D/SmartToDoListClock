@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+29f3763de0e8d700b743978180cf21b3 CMakeFiles/SmartDeskClock_autogen
+29f3763de0e8d700b743978180cf21b3 CMakeFiles/SmartDeskClock_autogen_timestamp_deps
+3c20d78625eccf3582d8de42a9bbdd46 SmartDeskClock_autogen/timestamp

@@ -21,9 +21,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    // ✅ 枚举移到 public 区域，确保 signals 能看到
     enum WindowLayer { LayerTop, LayerNormal, LayerBottom };
-    
+
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -39,7 +38,7 @@ protected:
 
 signals:
     void lockChanged(bool locked);
-    void layerChanged(MainWindow::WindowLayer layer);  // ✅ 使用完整类型名
+    void layerChanged(MainWindow::WindowLayer layer);
 
 private slots:
     void updateTime();
@@ -47,13 +46,13 @@ private slots:
     void onWeatherUpdated(const QString &weather, int temp);
     void onWeatherPoem(const QString &poem);
     void onStyleGenerated(const QString &name, const QString &desc, const QJsonObject &styleData);
-    
+
     void toggleLock();
     void updateLockState();
-    
+
     void setWindowLayer(const QString &layer);
     void cycleWindowLayer();
-    
+
     void startGenerateAIStyle();
     void generateWithPrompt();
     void saveAIStyle();
@@ -61,31 +60,44 @@ private slots:
     void regenerateStyle();
     void showStyleSelector();
     void switchProvider(const QString &provider);
-    
+
     void toggleVisibility();
     void fadeInQuote(const QString &text);
+
+    // Todo
     void onAddTodoClicked();
     void onTodoItemClicked(int index);
     void onTodoItemCompleted(int index, bool completed);
     void onTodoHeightChanged(int newHeight);
 
+    // 番茄钟
+    void onPomodoroStarted();
+    void onPomodoroFinished();
+    void onPomodoroStopped();
+
+    // 智能主题
+    void checkSmartTheme();
+    void applySmartTheme(const QString &timeSlot, const QString &weather);
+    void enableSmartTheme(bool enabled);
+    void onSmartThemeToggled(bool enabled);
+
 private:
     void setupUI();
     void setupTray();
-    void setupGlobalShortcuts();  // ✅ 改为全局快捷键
+    void setupGlobalShortcuts();
     void applyStyle(const ClockStyle &style, bool preview = false);
     ClockStyle parseStyleFromJson(const QJsonObject &obj);
     void applyWindowFlags();
-    void onGlobalShortcutActivated(int id);  // ✅ 添加
-    // ✅ 删除重复定义，使用 public 区域的枚举
+    void onGlobalShortcutActivated(int id);
+
     WindowLayer m_currentLayer = LayerTop;
     QString layerToString(WindowLayer layer) const;
-    
+
     // 锁定状态
     bool m_locked = false;
-    
+
     // 调整大小相关
-    enum EdgeResize { EdgeNone, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, 
+    enum EdgeResize { EdgeNone, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom,
                       EdgeTopLeft, EdgeTopRight, EdgeBottomLeft, EdgeBottomRight };
     EdgeResize m_resizeEdge = EdgeNone;
     bool m_resizing = false;
@@ -93,27 +105,38 @@ private:
     QRect m_resizeStartGeometry;
     EdgeResize detectResizeEdge(const QPoint &pos) const;
     void updateCursor(EdgeResize edge);
-    
+
     bool m_dragging = false;
     QPoint m_dragPosition;
-    QLabel *m_weatherPoemLabel;  // 新增
-    TodoWidget *m_todoWidget;  // 新增
-    
+
+    // 智能主题
+    bool m_smartThemeEnabled = true;
+    QTimer *m_smartThemeTimer = nullptr;
+    QString m_lastTimeSlot;
+    QString m_currentWeather;
+    int m_currentTemp = 0;
+    QString m_currentEmotion;
+
+    // UI组件
+    QLabel *m_weatherPoemLabel = nullptr;
+    TodoWidget *m_todoWidget = nullptr;
+    ClockWidget *m_clockWidget = nullptr;
+    WeatherWidget *m_weatherWidget = nullptr;
+    AIQuoteService *m_aiService = nullptr;
+    ConfigManager *m_config = nullptr;
+    QSystemTrayIcon *m_trayIcon = nullptr;
+    QLabel *m_quoteLabel = nullptr;
+    QGraphicsOpacityEffect *m_quoteEffect = nullptr;
+    QTimer *m_timer = nullptr;
+    QTimer *m_raiseTimer = nullptr;
+    X11GlobalShortcut *m_globalShortcut = nullptr;
+
+    // AI样式预览
     bool m_previewingAI = false;
     QJsonObject m_pendingStyleData;
     QString m_pendingStyleName;
     QString m_pendingStyleDesc;
     QString m_lastUserPrompt;
-    QTimer *m_raiseTimer = nullptr;  // 置顶守护定时器
-    ClockWidget *m_clockWidget;
-    WeatherWidget *m_weatherWidget;
-    AIQuoteService *m_aiService;
-    ConfigManager *m_config;
-    QSystemTrayIcon *m_trayIcon;
-    QLabel *m_quoteLabel;
-    QGraphicsOpacityEffect *m_quoteEffect;
-    QTimer *m_timer;
-    X11GlobalShortcut *m_globalShortcut = nullptr;
 };
 
-#endif
+#endif // MAINWINDOW_H

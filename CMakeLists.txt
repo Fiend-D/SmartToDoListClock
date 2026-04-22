@@ -22,12 +22,11 @@ qt_add_executable(SmartDeskClock
     configmanager.cpp configmanager.h
     emotionanalyzer.cpp emotionanalyzer.h
     aivisualengine.cpp aivisualengine.h
-    # ✅ 添加 X11 全局快捷键文件
     x11globalshortcut.cpp x11globalshortcut.h
-    # ✅ 添加 Todo 相关文件
     todoitem.cpp todoitem.h
     todowidget.cpp todowidget.h
     addtododialog.cpp addtododialog.h
+    neumorphism.h
 )
 
 target_link_libraries(SmartDeskClock PRIVATE

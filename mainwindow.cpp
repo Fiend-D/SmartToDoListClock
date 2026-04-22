@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "emotionanalyzer.h"
+#include "neumorphism.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <QMenu>
@@ -10,6 +11,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QShortcut>
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_previewingAI(false)
     , m_locked(false)
     , m_currentLayer(LayerTop)
-    , m_resizeEdge(EdgeNone)
+    , m_smartThemeEnabled(true)
     , m_weatherPoemLabel(nullptr)
     , m_raiseTimer(nullptr)
     , m_clockWidget(nullptr)
@@ -28,54 +30,62 @@ MainWindow::MainWindow(QWidget *parent)
     , m_trayIcon(nullptr)
     , m_quoteLabel(nullptr)
     , m_quoteEffect(nullptr)
-    , m_todoWidget(nullptr)        // ✅ 确保这行也存在
+    , m_todoWidget(nullptr)
     , m_timer(nullptr)
     , m_globalShortcut(nullptr)
+    , m_smartThemeTimer(nullptr)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::Tool);
     setAttribute(Qt::WA_TranslucentBackground);
-    
-    // 设置大小策略，允许窗口大小变化
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setMinimumSize(200, 250);  // 减小最小尺寸限制
-    resize(400, 550);
-    
+    setMinimumSize(220, 300);
+    resize(420, 600);
+
     QScreen *screen = QGuiApplication::primaryScreen();
     QRect geo = screen->geometry();
     move(geo.width() - width() - 30, geo.height() - height() - 50);
-    
+
     m_config = new ConfigManager(this);
     m_aiService = new AIQuoteService(
         m_config->getAPIKeyForProvider(m_config->aiProvider()),
         m_config->aiProvider(),
         this
     );
+
     // 读取保存的层级
     QString savedLayer = m_config->currentLayer();
     if (savedLayer == "bottom") m_currentLayer = LayerBottom;
     else if (savedLayer == "normal") m_currentLayer = LayerNormal;
     else m_currentLayer = LayerTop;
-    
+
+    // 读取智能主题设置
+    m_smartThemeEnabled = m_config->smartThemeEnabled();
+
     applyWindowFlags();
     setupTray();
     setupUI();
-    qDebug() << "MainWindow: 开始";
+
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this, &MainWindow::updateTime);
     m_timer->start(1000);
     updateTime();
-    qDebug() << "MainWindow: updateTime 调用完成";
+
     QTimer *quoteTimer = new QTimer(this);
-    connect(quoteTimer, &QTimer::timeout, [this]() { 
-        if (m_aiService) m_aiService->fetchQuote(); 
+    connect(quoteTimer, &QTimer::timeout, [this]() {
+        if (m_aiService) m_aiService->fetchQuote();
     });
-    qDebug() << "MainWindow: quoteTimer 开始";
     quoteTimer->start(60 * 60 * 1000);
-    
+
     if (m_aiService) m_aiService->fetchQuote();
-    qDebug() << "MainWindow: fetchQuote 调用完成";
+
+    // 智能主题定时器（每10分钟检查一次）
+    m_smartThemeTimer = new QTimer(this);
+    connect(m_smartThemeTimer, &QTimer::timeout, this, &MainWindow::checkSmartTheme);
+    m_smartThemeTimer->start(10 * 60 * 1000); // 10分钟
+    QTimer::singleShot(2000, this, &MainWindow::checkSmartTheme); // 启动后2秒首次检查
+
     setupGlobalShortcuts();
-    qDebug() << "MainWindow: 开始";
 }
 
 void MainWindow::setupUI()
@@ -83,93 +93,90 @@ void MainWindow::setupUI()
     QWidget *central = new QWidget(this);
     central->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setCentralWidget(central);
-    
+
     QVBoxLayout *layout = new QVBoxLayout(central);
-    layout->setContentsMargins(15, 0, 15, 10);  // 减小底部边距
-    layout->setSpacing(3);  // 减小控件间距，更紧凑
-    layout->setSizeConstraint(QLayout::SetNoConstraint);  // 允许布局自由调整大小
-    
-    // 天气诗句
-    m_weatherPoemLabel = new QLabel(this);
-    if(m_weatherPoemLabel){
-        m_weatherPoemLabel->setWordWrap(true);
-        m_weatherPoemLabel->setAlignment(Qt::AlignCenter);
-        m_weatherPoemLabel->setMinimumHeight(25);
-        m_weatherPoemLabel->setMaximumHeight(60);
-        m_weatherPoemLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        layout->addWidget(m_weatherPoemLabel, 0);
-    }
-    
-    // 信号连接（建议移到构造函数，这里也可以）
-    connect(m_aiService, &AIQuoteService::quoteReceived, 
+    layout->setContentsMargins(20, 15, 20, 15);
+    layout->setSpacing(8);
+    layout->setSizeConstraint(QLayout::SetNoConstraint);
+
+    // 信号连接
+    connect(m_aiService, &AIQuoteService::quoteReceived,
             this, &MainWindow::onQuoteReceived);
-    connect(m_aiService, &AIQuoteService::weatherPoemReceived, 
+    connect(m_aiService, &AIQuoteService::weatherPoemReceived,
             this, &MainWindow::onWeatherPoem);
-    connect(m_aiService, &AIQuoteService::styleGenerated, 
+    connect(m_aiService, &AIQuoteService::styleGenerated,
             this, &MainWindow::onStyleGenerated);
-    connect(m_aiService, &AIQuoteService::networkError, 
+    connect(m_aiService, &AIQuoteService::networkError,
             this, [this](const QString &error) {
                 QMessageBox::warning(this, "网络错误", error);
             });
-    
+
+    // 天气诗句
+    m_weatherPoemLabel = new QLabel(this);
+    m_weatherPoemLabel->setWordWrap(true);
+    m_weatherPoemLabel->setAlignment(Qt::AlignCenter);
+    m_weatherPoemLabel->setMinimumHeight(20);
+    m_weatherPoemLabel->setMaximumHeight(50);
+    m_weatherPoemLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    layout->addWidget(m_weatherPoemLabel, 0);
+
     // 时钟
     m_clockWidget = new ClockWidget(this);
     m_clockWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->addWidget(m_clockWidget, 2, Qt::AlignCenter);  // 增加拉伸因子，使时钟占据更多空间
-    
+    layout->addWidget(m_clockWidget, 3, Qt::AlignCenter);
+
+    // 连接番茄钟信号
+    connect(m_clockWidget, &ClockWidget::pomodoroStarted, this, &MainWindow::onPomodoroStarted);
+    connect(m_clockWidget, &ClockWidget::pomodoroFinished, this, &MainWindow::onPomodoroFinished);
+    connect(m_clockWidget, &ClockWidget::pomodoroStopped, this, &MainWindow::onPomodoroStopped);
+
     // 天气温度
     m_weatherWidget = new WeatherWidget(m_config->weatherApiKey(), m_config->city(), this);
     m_weatherWidget->setMinimumHeight(25);
-    m_weatherWidget->setMaximumHeight(60);
-    m_weatherWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_weatherWidget->setMaximumHeight(50);
+    m_weatherWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     connect(m_weatherWidget, &WeatherWidget::weatherUpdated, this, &MainWindow::onWeatherUpdated);
     layout->addWidget(m_weatherWidget, 0);
-    
+
     // AI语录
     m_quoteLabel = new QLabel(this);
     m_quoteLabel->setWordWrap(true);
     m_quoteLabel->setAlignment(Qt::AlignCenter);
-    m_quoteLabel->setMinimumHeight(60);
-    m_quoteLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    
+    m_quoteLabel->setMinimumHeight(50);
+    m_quoteLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+
     m_quoteEffect = new QGraphicsOpacityEffect(this);
     m_quoteEffect->setOpacity(1.0);
     m_quoteLabel->setGraphicsEffect(m_quoteEffect);
-    
-    layout->addWidget(m_quoteLabel, 1);  // 增加拉伸因子，使语录区域适度拉伸
-    
-    // 添加TodoWidget
+
+    layout->addWidget(m_quoteLabel, 1);
+
+    // TodoWidget
     m_todoWidget = new TodoWidget(this);
     m_todoWidget->setMinimumHeight(40);
     m_todoWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    layout->addWidget(m_todoWidget, 0);  // 固定高度，不拉伸
-    
-    // 连接TodoWidget的信号
+    layout->addWidget(m_todoWidget, 0);
+
     connect(m_todoWidget, &TodoWidget::addButtonClicked, this, &MainWindow::onAddTodoClicked);
     connect(m_todoWidget, &TodoWidget::todoItemClicked, this, &MainWindow::onTodoItemClicked);
     connect(m_todoWidget, &TodoWidget::todoItemCompleted, this, &MainWindow::onTodoItemCompleted);
-    connect(m_todoWidget, &TodoWidget::heightChanged, 
-            this, &MainWindow::onTodoHeightChanged, 
-            Qt::QueuedConnection);  // ✅ 异步连接，打破递归链
-    
+    connect(m_todoWidget, &TodoWidget::heightChanged,
+            this, &MainWindow::onTodoHeightChanged,
+            Qt::QueuedConnection);
+
     // 加载代办事项
     if (m_config) {
         QList<TodoItem> todoItems = m_config->todoItems();
         m_todoWidget->setTodoItems(todoItems);
     }
-    
-    // 可选：如果你希望底部留白，把内容往上顶，取消下面这行注释
-    // layout->addStretch(1);
-    
-    applyStyle(m_config->currentStyle());
-    qDebug() << "MainWindow: applyStyle 调用完成";
-}
 
+    applyStyle(m_config->currentStyle());
+}
 
 void MainWindow::applyWindowFlags()
 {
     Qt::WindowFlags flags = Qt::FramelessWindowHint | Qt::Tool;
-    
+
     switch (m_currentLayer) {
     case LayerTop:
         flags |= Qt::WindowStaysOnTopHint;
@@ -180,7 +187,7 @@ void MainWindow::applyWindowFlags()
     case LayerNormal:
         break;
     }
-    
+
     bool wasVisible = isVisible();
     setWindowFlags(flags);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -202,10 +209,10 @@ void MainWindow::setWindowLayer(const QString &layer)
     if (layer == "top") m_currentLayer = LayerTop;
     else if (layer == "normal") m_currentLayer = LayerNormal;
     else if (layer == "bottom") m_currentLayer = LayerBottom;
-    
+
     applyWindowFlags();
     m_config->setCurrentLayer(layer);
-    
+
     if (m_trayIcon) {
         m_trayIcon->showMessage("层级切换", "当前: " + layerToString(m_currentLayer));
     }
@@ -224,7 +231,7 @@ void MainWindow::toggleLock()
 {
     m_locked = !m_locked;
     updateLockState();
-    emit lockChanged(m_locked);  // 添加这行
+    emit lockChanged(m_locked);
     QString status = m_locked ? "已锁定" : "已解锁";
     if (m_trayIcon) {
         m_trayIcon->showMessage("锁定状态", status);
@@ -237,16 +244,14 @@ void MainWindow::updateLockState()
         setAttribute(Qt::WA_TransparentForMouseEvents, true);
         setWindowFlag(Qt::WindowTransparentForInput, true);
         setWindowFlag(Qt::WindowStaysOnTopHint, true);
-        
+
         show();
         raise();
-        
-        // ✅ 确保只有一个定时器实例，缩短到 50ms（20fps，人眼无感知但响应更快）
+
         if (!m_raiseTimer) {
             m_raiseTimer = new QTimer(this);
-            m_raiseTimer->setInterval(50);  // 原来是 100ms，现在 50ms
+            m_raiseTimer->setInterval(50);
             connect(m_raiseTimer, &QTimer::timeout, this, [this]() {
-                // 只在窗口失去置顶属性时才 raise，减少无效调用
                 if (!(windowFlags() & Qt::WindowStaysOnTopHint)) {
                     setWindowFlag(Qt::WindowStaysOnTopHint, true);
                     show();
@@ -254,85 +259,86 @@ void MainWindow::updateLockState()
                 raise();
             });
         }
-        
-        // ✅ 防止重复启动
+
         if (!m_raiseTimer->isActive()) {
             m_raiseTimer->start();
         }
-        
+
     } else {
         setAttribute(Qt::WA_TransparentForMouseEvents, false);
         setWindowFlag(Qt::WindowTransparentForInput, false);
-        
-        // ✅ 完全停止并删除定时器（避免残留）
+
         if (m_raiseTimer) {
             m_raiseTimer->stop();
             delete m_raiseTimer;
             m_raiseTimer = nullptr;
         }
-        
+
         setWindowFlag(Qt::WindowStaysOnTopHint, true);
         show();
         raise();
         activateWindow();
     }
-    
+
     update();
 }
+
 void MainWindow::setupTray()
 {
     m_trayIcon = new QSystemTrayIcon(this);
-    
+
     QMenu *menu = new QMenu(this);
-    
+
     QAction *lockAction = menu->addAction("锁定🔒[L]", this, &MainWindow::toggleLock);
     lockAction->setCheckable(true);
     connect(this, &MainWindow::lockChanged, [lockAction](bool locked) {
         lockAction->setChecked(locked);
     });
-    
+
     QMenu *layerMenu = menu->addMenu("层级📌[T]");
-    
-    // ✅ 使用 QActionGroup 实现单选互斥
     QActionGroup *layerGroup = new QActionGroup(this);
     layerGroup->setExclusive(true);
-    
+
     QAction *topAct = layerMenu->addAction("[顶] 置顶", [this]() { setWindowLayer("top"); });
     QAction *normAct = layerMenu->addAction("[普] 普通", [this]() { setWindowLayer("normal"); });
     QAction *botAct = layerMenu->addAction("[底] 底层", [this]() { setWindowLayer("bottom"); });
-    
-    // 加入互斥组
+
     layerGroup->addAction(topAct);
     layerGroup->addAction(normAct);
     layerGroup->addAction(botAct);
-    
-    // 都设为可选中
+
     topAct->setCheckable(true);
     normAct->setCheckable(true);
     botAct->setCheckable(true);
-    
-    // 设置当前选中
+
     switch (m_currentLayer) {
     case LayerTop: topAct->setChecked(true); break;
     case LayerNormal: normAct->setChecked(true); break;
     case LayerBottom: botAct->setChecked(true); break;
     }
-    
-    // ✅ 关键：切换时更新选中状态（如果不使用 QActionGroup 的自动互斥）
+
     connect(this, &MainWindow::layerChanged, [topAct, normAct, botAct](MainWindow::WindowLayer layer) {
         topAct->setChecked(layer == MainWindow::LayerTop);
         normAct->setChecked(layer == MainWindow::LayerNormal);
         botAct->setChecked(layer == MainWindow::LayerBottom);
     });
-    
+
     menu->addSeparator();
-    
+
+    // 智能主题开关
+    QAction *smartThemeAction = menu->addAction("智能主题🌅");
+    smartThemeAction->setCheckable(true);
+    smartThemeAction->setChecked(m_smartThemeEnabled);
+    connect(smartThemeAction, &QAction::toggled, this, &MainWindow::onSmartThemeToggled);
+
+    menu->addSeparator();
+
     QMenu *styleMenu = menu->addMenu("样式🎨[S]");
     styleMenu->addAction("选择样式...", this, &MainWindow::showStyleSelector);
     QMenu *aiMenu = styleMenu->addMenu("AI设计师🤖");
     aiMenu->addAction("随机创造🎲", this, &MainWindow::startGenerateAIStyle);
     aiMenu->addAction("描述生成📝...", this, &MainWindow::generateWithPrompt);
-    // 4. AI提供商（原有）
+
     QMenu *providerMenu = menu->addMenu("🤖 AI提供商");
     providerMenu->addAction("智谱AI", [this]() { switchProvider("zhipu"); });
     providerMenu->addAction("Kimi", [this]() { switchProvider("kimi"); });
@@ -342,14 +348,14 @@ void MainWindow::setupTray()
     menu->addSeparator();
     menu->addAction("刷新语录🔄[R]", [this]() { if (m_aiService) m_aiService->fetchQuote(); });
     menu->addAction("刷新天气🔄", [this]() { if (m_weatherWidget) m_weatherWidget->updateWeather(); });
-    
+
     menu->addSeparator();
     menu->addAction("显示/隐藏👁️[H]", this, &MainWindow::toggleVisibility);
     menu->addAction("退出❌[Q]", this, &QWidget::close);
-    
+
     m_trayIcon->setContextMenu(menu);
     m_trayIcon->show();
-    
+
     connect(m_trayIcon, &QSystemTrayIcon::activated, this, [this](QSystemTrayIcon::ActivationReason reason) {
         if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick) {
             toggleVisibility();
@@ -359,155 +365,75 @@ void MainWindow::setupTray()
 
 void MainWindow::setupGlobalShortcuts()
 {
-    qDebug() << "setupGlobalShortcuts: 开始";
     m_globalShortcut = new X11GlobalShortcut(this);
-    qDebug() << "setupGlobalShortcuts: 创建 X11GlobalShortcut 完成";
-    
-    // 连接信号
-    connect(m_globalShortcut, &X11GlobalShortcut::activated, 
+    connect(m_globalShortcut, &X11GlobalShortcut::activated,
             this, &MainWindow::onGlobalShortcutActivated);
-    qDebug() << "setupGlobalShortcuts: 连接信号完成";
-    
-    // 注册所有快捷键
-    // L - 锁定/解锁
-    qDebug() << "setupGlobalShortcuts: 注册快捷键 Ctrl+Alt+L";
-    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+L"), 1);
-    // T - 切换层级
-    qDebug() << "setupGlobalShortcuts: 注册快捷键 Ctrl+Alt+T";
-    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+T"), 2);
-    // H - 显示/隐藏
-    qDebug() << "setupGlobalShortcuts: 注册快捷键 Ctrl+Alt+H";
-    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+H"), 3);
-    // S - 样式选择
-    qDebug() << "setupGlobalShortcuts: 注册快捷键 Ctrl+Alt+S";
-    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+S"), 4);
-    // R - 刷新语录
-    qDebug() << "setupGlobalShortcuts: 注册快捷键 Ctrl+Alt+R";
-    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+R"), 5);
-    // // Ctrl++ - 放大
-    // m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Equal"), 6);  // 主键盘 +
-    // m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Plus"), 6);   // 小键盘 +
-    // // Ctrl+- - 缩小
-    // m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Minus"), 7);
-    // Q - 退出
-    qDebug() << "setupGlobalShortcuts: 注册快捷键 Ctrl+Alt+Q";
-    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+Q"), 8);
-    qDebug() << "setupGlobalShortcuts: 结束";
+
+    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+L"), 1); // 锁定
+    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+T"), 2); // 层级
+    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+H"), 3); // 显示/隐藏
+    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+S"), 4); // 样式
+    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+R"), 5); // 刷新语录
+    m_globalShortcut->registerShortcut(QKeySequence("Ctrl+Alt+Q"), 8); // 退出
 }
 
 void MainWindow::applyStyle(const ClockStyle &style, bool preview)
 {
-    qDebug() << "applyStyle: 开始";
-    // ✅ 检查所有需要的控件
-    if (!m_clockWidget || !m_quoteLabel || !m_weatherPoemLabel) {
-        qDebug() << "applyStyle: 控件未初始化，跳过应用样式";
-        return;
-    }
-    qDebug() << "applyStyle: 控件检查完成";
-    
-    // ✅ 安全调用 setStyle
-    qDebug() << "applyStyle: 调用 m_clockWidget->setStyle";
+    if (!m_clockWidget || !m_quoteLabel || !m_weatherPoemLabel) return;
+
     m_clockWidget->setStyle(style);
-    qDebug() << "applyStyle: m_clockWidget->setStyle 调用完成";
-    
-    // 更新TodoWidget的时针颜色
+
     if (m_todoWidget) {
-        qDebug() << "applyStyle: 调用 m_todoWidget->setHourHandColor";
         m_todoWidget->setHourHandColor(style.hourHandColor);
-        qDebug() << "applyStyle: m_todoWidget->setHourHandColor 调用完成";
+        m_todoWidget->setAccentColor(style.hourHandColor);
     }
-    
-    // AI语录样式 - ✅ 每次都创建新的 effect，避免野指针
-    qDebug() << "applyStyle: 获取 widgetHeight";
+
     int widgetHeight = centralWidget() ? centralWidget()->height() : height();
-    qDebug() << "applyStyle: widgetHeight:" << widgetHeight;
-    int quoteFontSize = qMax(12, widgetHeight / 35);
-    qDebug() << "applyStyle: quoteFontSize:" << quoteFontSize;
-    qDebug() << "applyStyle: style.quoteColor.isValid():" << style.quoteColor.isValid();
-    QString quoteSheet = QString("color: %1; font-size: %2px; padding: 5px;")
+    int quoteFontSize = qMax(11, widgetHeight / 32);
+    QString quoteSheet = QString("color: %1; font-size: %2px; padding: 6px; line-height: 1.4;")
         .arg(style.quoteColor.name())
         .arg(quoteFontSize);
-    qDebug() << "applyStyle: quoteSheet:" << quoteSheet;
-    qDebug() << "applyStyle: 调用 m_quoteLabel->setStyleSheet";
     m_quoteLabel->setStyleSheet(quoteSheet);
-    qDebug() << "applyStyle: m_quoteLabel->setStyleSheet 调用完成";
-    
-    // ✅ 关键修改：只创建一次 m_quoteEffect，避免重复删除和重建
-    qDebug() << "applyStyle: 处理 m_quoteEffect";
+
     if (!m_quoteEffect && m_quoteLabel) {
-        qDebug() << "applyStyle: 创建新的 m_quoteEffect";
         m_quoteEffect = new QGraphicsOpacityEffect(this);
-        qDebug() << "applyStyle: 新的 m_quoteEffect 创建完成，地址:" << m_quoteEffect;
         m_quoteEffect->setOpacity(1.0);
-        qDebug() << "applyStyle: 调用 m_quoteLabel->setGraphicsEffect";
         m_quoteLabel->setGraphicsEffect(m_quoteEffect);
-        qDebug() << "applyStyle: m_quoteLabel->setGraphicsEffect 调用完成";
     }
-    
-    // 天气名言样式
-    qDebug() << "applyStyle: 处理天气名言样式";
-    int weatherFontSize = qMax(10, widgetHeight / 40);
-    qDebug() << "applyStyle: weatherFontSize:" << weatherFontSize;
-    qDebug() << "applyStyle: style.markColor.isValid():" << style.markColor.isValid();
+
+    int weatherFontSize = qMax(9, widgetHeight / 38);
     QString colorName = style.markColor.isValid() ? style.markColor.name() : "#888888";
-    qDebug() << "applyStyle: colorName:" << colorName;
     QString weatherSheet = QString("color: %1; font-size: %2px;").arg(colorName).arg(weatherFontSize);
-    qDebug() << "applyStyle: weatherSheet:" << weatherSheet;
-    qDebug() << "applyStyle: 调用 m_weatherPoemLabel->setStyleSheet";
     m_weatherPoemLabel->setStyleSheet(weatherSheet);
-    qDebug() << "applyStyle: m_weatherPoemLabel->setStyleSheet 调用完成";
-    
-    qDebug() << "applyStyle: 调用 update()";
+
     update();
-    qDebug() << "applyStyle: update() 调用完成";
-    
+
     if (!preview && m_trayIcon) {
-        qDebug() << "applyStyle: 调用 m_trayIcon->showMessage";
         m_trayIcon->showMessage("样式切换", style.name);
-        qDebug() << "applyStyle: m_trayIcon->showMessage 调用完成";
     }
-    qDebug() << "applyStyle: 结束";
 }
 
 void MainWindow::onGlobalShortcutActivated(int id)
 {
-    // 如果窗口隐藏，先显示（用于显示/隐藏快捷键的特殊处理）
     switch (id) {
-    case 1: // L - 锁定/解锁
-        toggleLock();
-        break;
-    case 2: // T - 切换层级
-        cycleWindowLayer();
-        break;
-    case 3: // H - 显示/隐藏
-        toggleVisibility();
-        break;
-    case 4: // S - 样式选择
-        // 解锁状态下才允许选择样式
+    case 1: toggleLock(); break;
+    case 2: cycleWindowLayer(); break;
+    case 3: toggleVisibility(); break;
+    case 4:
         if (!m_locked) {
             showStyleSelector();
         } else {
-            // 锁定时先解锁再选择，或提示用户
-            toggleLock();  // 先解锁
+            toggleLock();
             QTimer::singleShot(100, this, &MainWindow::showStyleSelector);
         }
         break;
-    case 5: // R - 刷新语录
+    case 5:
         if (m_aiService) m_aiService->fetchQuote();
         break;
-    case 6: // Ctrl++ - 放大
-        resize(size() * 1.1);
-        break;
-    case 7: // Ctrl+- - 缩小
-        resize(size() * 0.9);
-        break;
-    case 8: // Q - 退出
-        close();
-        break;
+    case 8: close(); break;
     }
-    
-    // 快捷键触发后，确保窗口显示在最前（如果是显示状态）
-    if (isVisible() && id != 3) {  // 显示/隐藏快捷键不需要额外处理
+
+    if (isVisible() && id != 3) {
         raise();
     }
 }
@@ -515,45 +441,44 @@ void MainWindow::onGlobalShortcutActivated(int id)
 void MainWindow::onQuoteReceived(const QString &quote, const QString &author, const QString &emotion)
 {
     if (!m_quoteLabel) return;
-    
+    m_currentEmotion = emotion;
     fadeInQuote(quote + "\n— " + author);
-    
-    // if (m_config && m_config->currentStyle().emotion != emotion) {
-    //     QString matched = m_config->findStyleForEmotion(emotion);
-    //     if (!matched.isEmpty()) {
-    //         int ret = QMessageBox::question(this, "情绪匹配", 
-    //             QString("检测到%1情绪，是否切换？").arg(emotion));
-    //         if (ret == QMessageBox::Yes) {
-    //             applyStyle(m_config->getStyle(matched));
-    //         }
-    //     }
-    // }
+
+    // 如果启用了智能主题且情绪变化明显，可以触发微调
+    if (m_smartThemeEnabled && !m_previewingAI && !emotion.isEmpty()) {
+        // 情绪驱动的微调可以在这里实现
+        // 暂时只记录，不自动切换避免打扰
+    }
 }
 
 void MainWindow::onWeatherUpdated(const QString &weather, int temp)
 {
+    m_currentWeather = weather;
+    m_currentTemp = temp;
     if (m_aiService) m_aiService->fetchWeatherPoem(weather, temp);
+
+    // 天气更新时，如果启用了智能主题，触发检查
+    if (m_smartThemeEnabled) {
+        QTimer::singleShot(1000, this, &MainWindow::checkSmartTheme);
+    }
 }
 
 void MainWindow::onWeatherPoem(const QString &poem)
 {
-    // 优先使用独立的天气标签
     if (m_weatherPoemLabel) {
         m_weatherPoemLabel->setText("🌤️ " + poem);
         return;
     }
-    
-    // 兼容旧版本：共用 quoteLabel
+
     if (!m_quoteLabel) return;
-    
     static QDateTime lastPoemTime;
     lastPoemTime = QDateTime::currentDateTime();
-    
+
     if (m_quoteLabel->text().startsWith("🌤️")) return;
-    
+
     QString original = m_quoteLabel->text();
     m_quoteLabel->setText("🌤️ " + poem);
-    
+
     QTimer::singleShot(5000, [this, original, poemTime = lastPoemTime]() {
         if (lastPoemTime != poemTime) return;
         if (!m_previewingAI && m_quoteLabel && m_quoteLabel->text().startsWith("🌤️")) {
@@ -564,37 +489,28 @@ void MainWindow::onWeatherPoem(const QString &poem)
 
 void MainWindow::onStyleGenerated(const QString &name, const QString &desc, const QJsonObject &styleData)
 {
-    // 检查解析是否成功（如果 styleData 为空对象，说明解析失败了）
     if (styleData.isEmpty() || !styleData.contains("name")) {
         QMessageBox::warning(this, "解析失败", "AI返回的数据格式不正确，请重试");
         return;
     }
-    // 检查是否有 aiVisualScript
-    if (styleData.contains("aiVisualScript")) {
-        qDebug() << "视觉脚本:" << styleData["aiVisualScript"].toString();
-    } else {
-        qDebug() << "警告: 没有 aiVisualScript 字段!";
-    }
-    
+
     m_pendingStyleName = name;
     m_pendingStyleDesc = desc;
     m_pendingStyleData = styleData;
     m_previewingAI = true;
-    
+
     ClockStyle style = parseStyleFromJson(styleData);
     applyStyle(style, true);
-    
+
     QMessageBox msg(this);
     msg.setWindowTitle("AI设计完成");
     msg.setText(QString("🎨 %1\n\n📝 %2\n\n喜欢这个风格吗？").arg(name, desc));
-    msg.setStandardButtons(QMessageBox::Save | QMessageBox::Cancel | QMessageBox::Retry);
-    // 新代码（推荐）：
+
     QPushButton *saveBtn = msg.addButton("保存并使用", QMessageBox::AcceptRole);
     QPushButton *cancelBtn = msg.addButton("放弃", QMessageBox::RejectRole);
     QPushButton *retryBtn = msg.addButton("再来一次", QMessageBox::ResetRole);
-    
-    // 然后检查返回值：
-    int ret = msg.exec();
+
+    msg.exec();
     if (msg.clickedButton() == saveBtn) {
         saveAIStyle();
     } else if (msg.clickedButton() == retryBtn) {
@@ -603,6 +519,7 @@ void MainWindow::onStyleGenerated(const QString &name, const QString &desc, cons
         rejectAIStyle();
     }
 }
+
 ClockStyle MainWindow::parseStyleFromJson(const QJsonObject &obj)
 {
     ClockStyle style;
@@ -620,7 +537,7 @@ ClockStyle MainWindow::parseStyleFromJson(const QJsonObject &obj)
     style.bgAlpha = obj["bgAlpha"].toInt(80);
     style.glowEffect = obj["glowEffect"].toBool(true);
     style.emotion = obj["emotion"].toString("calm");
-    style.aiVisualScript = obj["aiVisualScript"].toString();  // ✅ 添加这行！
+    style.aiVisualScript = obj["aiVisualScript"].toString();
     return style;
 }
 
@@ -634,9 +551,9 @@ void MainWindow::startGenerateAIStyle()
 void MainWindow::generateWithPrompt()
 {
     if (!m_aiService) return;
-    
+
     bool ok;
-    QString prompt = QInputDialog::getText(this, "AI设计师", 
+    QString prompt = QInputDialog::getText(this, "AI设计师",
         "描述风格（如：赛博朋克+水墨、极简日系）：", QLineEdit::Normal, "", &ok);
     if (ok && !prompt.isEmpty()) {
         m_lastUserPrompt = prompt;
@@ -647,7 +564,7 @@ void MainWindow::generateWithPrompt()
 void MainWindow::saveAIStyle()
 {
     if (!m_config) return;
-    
+
     QString id = "ai_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
     if (m_config->addCustomStyle(id, m_pendingStyleData)) {
         applyStyle(m_config->currentStyle());
@@ -664,7 +581,7 @@ void MainWindow::rejectAIStyle()
 void MainWindow::regenerateStyle()
 {
     if (!m_aiService) return;
-    
+
     if (m_lastUserPrompt.isEmpty()) {
         m_aiService->generateClockStyle(QString());
     } else {
@@ -675,7 +592,7 @@ void MainWindow::regenerateStyle()
 void MainWindow::showStyleSelector()
 {
     if (!m_config) return;
-    
+
     QStringList styles = m_config->availableStyles();
     bool ok;
     QString selected = QInputDialog::getItem(this, "选择样式", "可用样式：", styles, 0, false, &ok);
@@ -684,28 +601,30 @@ void MainWindow::showStyleSelector()
         QString id = m_config->getStyleIdByName(selected);
         m_config->setStyle(id);
         applyStyle(style);
+        // 手动选择样式时，临时禁用智能主题
+        m_previewingAI = false;
     }
 }
 
 void MainWindow::switchProvider(const QString &provider)
 {
     QString key = m_config->getAPIKeyForProvider(provider);
-    
+
     if (key.isEmpty() && provider != "ollama") {
         bool ok;
-        key = QInputDialog::getText(this, "配置API Key", 
-            QString("请输入%1的API Key:").arg(provider), 
+        key = QInputDialog::getText(this, "配置API Key",
+            QString("请输入%1的API Key:").arg(provider),
             QLineEdit::Password, "", &ok);
         if (!ok || key.isEmpty()) return;
         m_config->setAPIKeyForProvider(provider, key);
     }
-    
+
     m_config->setAIProvider(provider);
     m_aiService->setProvider(provider, key);
-    
-    QMessageBox::information(this, "切换成功", 
+
+    QMessageBox::information(this, "切换成功",
         QString("已切换至 %1").arg(provider));
-    
+
     m_aiService->fetchQuote();
 }
 
@@ -725,40 +644,203 @@ void MainWindow::fadeInQuote(const QString &text)
     if (m_quoteLabel) m_quoteLabel->setText(text);
 }
 
+// ===== 番茄钟槽函数 =====
+void MainWindow::onPomodoroStarted()
+{
+    if (m_trayIcon) {
+        m_trayIcon->showMessage("番茄钟", "专注模式已开启，祝你好运！🍅", QSystemTrayIcon::Information, 2000);
+    }
+}
+
+void MainWindow::onPomodoroFinished()
+{
+    if (m_config) {
+        m_config->incrementPomodoroCount();
+    }
+    if (m_trayIcon) {
+        int count = m_config ? m_config->pomodoroCompletedToday() : 0;
+        QString msg = QString("恭喜完成一个番茄！今日已完成 %1 个 🎉").arg(count);
+        m_trayIcon->showMessage("番茄钟", msg, QSystemTrayIcon::Information, 5000);
+    }
+}
+
+void MainWindow::onPomodoroStopped()
+{
+    if (m_trayIcon) {
+        m_trayIcon->showMessage("番茄钟", "专注模式已停止", QSystemTrayIcon::Information, 1500);
+    }
+}
+
+// ===== 智能主题 =====
+void MainWindow::onSmartThemeToggled(bool enabled)
+{
+    m_smartThemeEnabled = enabled;
+    if (m_config) m_config->setSmartThemeEnabled(enabled);
+
+    if (enabled) {
+        checkSmartTheme();
+        if (m_trayIcon) {
+            m_trayIcon->showMessage("智能主题", "已启用智能主题切换");
+        }
+    } else {
+        if (m_trayIcon) {
+            m_trayIcon->showMessage("智能主题", "已禁用，恢复手动样式");
+        }
+    }
+}
+
+void MainWindow::checkSmartTheme()
+{
+    if (!m_smartThemeEnabled || m_previewingAI) return;
+
+    int hour = QTime::currentTime().hour();
+    QString timeSlot;
+
+    if (hour >= 6 && hour < 9) {
+        timeSlot = "morning";
+    } else if (hour >= 9 && hour < 17) {
+        timeSlot = "daytime";
+    } else if (hour >= 17 && hour < 20) {
+        timeSlot = "dusk";
+    } else if (hour >= 20 && hour < 23) {
+        timeSlot = "evening";
+    } else {
+        timeSlot = "night";
+    }
+
+    // 如果时段没变，不重复切换
+    if (timeSlot == m_lastTimeSlot) return;
+    m_lastTimeSlot = timeSlot;
+
+    applySmartTheme(timeSlot, m_currentWeather);
+}
+
+void MainWindow::applySmartTheme(const QString &timeSlot, const QString &weather)
+{
+    if (!m_config) return;
+
+    // 内置智能主题配色（新拟态风格）
+    ClockStyle style;
+    style.name = timeSlot;
+    style.isDigital = false;
+    style.glowEffect = true;
+    style.bgAlpha = 85;
+    style.fontFamily = "Noto Sans CJK SC";
+
+    if (timeSlot == "morning") {
+        // 清晨：暖金+薄荷
+        style.backgroundColor = QColor(45, 48, 58);
+        style.hourHandColor = QColor(255, 200, 100);
+        style.minuteHandColor = QColor(150, 220, 180);
+        style.secondHandColor = QColor(255, 150, 120);
+        style.markColor = QColor(200, 190, 170);
+        style.textColor = QColor(240, 235, 220);
+        style.quoteColor = QColor(255, 200, 120);
+        style.emotion = "peaceful";
+    } else if (timeSlot == "daytime") {
+        // 白天：明亮蓝白
+        style.backgroundColor = QColor(42, 50, 65);
+        style.hourHandColor = QColor(100, 200, 255);
+        style.minuteHandColor = QColor(120, 220, 200);
+        style.secondHandColor = QColor(255, 120, 150);
+        style.markColor = QColor(180, 190, 210);
+        style.textColor = QColor(230, 235, 245);
+        style.quoteColor = QColor(120, 200, 255);
+        style.emotion = "energetic";
+    } else if (timeSlot == "dusk") {
+        // 黄昏：橙红暖色
+        style.backgroundColor = QColor(50, 42, 48);
+        style.hourHandColor = QColor(255, 160, 80);
+        style.minuteHandColor = QColor(220, 140, 120);
+        style.secondHandColor = QColor(255, 100, 100);
+        style.markColor = QColor(200, 175, 160);
+        style.textColor = QColor(245, 230, 220);
+        style.quoteColor = QColor(255, 170, 90);
+        style.emotion = "warm";
+    } else if (timeSlot == "evening") {
+        // 夜晚：深蓝紫
+        style.backgroundColor = QColor(38, 40, 58);
+        style.hourHandColor = QColor(160, 140, 255);
+        style.minuteHandColor = QColor(140, 180, 240);
+        style.secondHandColor = QColor(220, 120, 200);
+        style.markColor = QColor(170, 170, 200);
+        style.textColor = QColor(225, 225, 240);
+        style.quoteColor = QColor(180, 160, 255);
+        style.emotion = "calm";
+    } else {
+        // 深夜：暗色护眼
+        style.backgroundColor = QColor(30, 32, 38);
+        style.hourHandColor = QColor(100, 180, 160);
+        style.minuteHandColor = QColor(120, 160, 180);
+        style.secondHandColor = QColor(180, 100, 120);
+        style.markColor = QColor(130, 135, 145);
+        style.textColor = QColor(200, 205, 215);
+        style.quoteColor = QColor(120, 180, 160);
+        style.emotion = "quiet";
+    }
+
+    // 根据天气微调
+    if (!weather.isEmpty()) {
+        if (weather.contains("雨") || weather.contains("Rain")) {
+            // 雨天降低饱和度，偏灰蓝
+            style.markColor = Neumorphism::mix(style.markColor, QColor(140, 150, 170), 0.3);
+            style.quoteColor = Neumorphism::mix(style.quoteColor, QColor(130, 160, 200), 0.2);
+        } else if (weather.contains("雪") || weather.contains("Snow")) {
+            // 雪天偏冷白
+            style.markColor = Neumorphism::mix(style.markColor, QColor(200, 210, 230), 0.3);
+            style.quoteColor = Neumorphism::mix(style.quoteColor, QColor(180, 200, 230), 0.2);
+        } else if (weather.contains("晴") || weather.contains("Clear")) {
+            // 晴天更明亮
+            style.markColor = Neumorphism::lighter(style.markColor, 10);
+        }
+    }
+
+    // 应用主题（如果当前不是AI预览模式）
+    if (!m_previewingAI) {
+        applyStyle(style, false);
+    }
+}
+
+// ===== 绘制事件 =====
 void MainWindow::paintEvent(QPaintEvent *)
 {
     if (!m_config) return;
-    
+
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    
-    // 关键：设置合成模式，确保透明区域真正透明
     painter.setCompositionMode(QPainter::CompositionMode_Source);
-    
-    // 先填充整个窗口为透明
+
+    // 透明背景
     painter.fillRect(rect(), Qt::transparent);
-    
-    // 再绘制圆角背景
+
     ClockStyle style = m_config->currentStyle();
-    QColor bgColor = QColor(0, 0, 0, style.bgAlpha);
-    
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.setBrush(bgColor);
-    painter.setPen(Qt::NoPen);
-    painter.drawRoundedRect(rect(), 20, 20);
-    
-    // 边框（可选）
+    QColor bgColor = style.backgroundColor;
+    bgColor.setAlpha(style.bgAlpha);
+
+    // 新拟态凸起背景
+    Neumorphism::drawRaisedRect(&painter, rect().adjusted(4, 4, -4, -4), 24,
+                                 bgColor, 0.35, 16, 8);
+
+    // 内边框装饰线
+    QColor innerBorder = Neumorphism::mix(style.markColor, bgColor, 0.7);
+    innerBorder.setAlpha(40);
+    painter.setPen(QPen(innerBorder, 1));
+    painter.setBrush(Qt::NoBrush);
+    painter.drawRoundedRect(rect().adjusted(12, 12, -12, -12), 18, 18);
+
+    // 锁定边框
     int penWidth = m_locked ? 2 : 0;
     if (penWidth > 0) {
         QColor borderColor = m_locked ? QColor(255, 100, 100) : style.hourHandColor;
+        borderColor.setAlpha(120);
         painter.setPen(QPen(borderColor, penWidth));
         painter.setBrush(Qt::NoBrush);
-        painter.drawRoundedRect(rect().adjusted(1, 1, -1, -1), 20, 20);
+        painter.drawRoundedRect(rect().adjusted(6, 6, -6, -6), 20, 20);
     }
-    
+
     if (m_locked) {
         painter.setPen(Qt::white);
-        painter.drawText(width() - 30, 20, "🔒");
+        painter.drawText(width() - 35, 25, "🔒");
     }
 }
 
@@ -767,6 +849,7 @@ void MainWindow::updateTime()
     if (m_clockWidget) m_clockWidget->setTime(QTime::currentTime());
 }
 
+// ===== 鼠标交互 =====
 MainWindow::EdgeResize MainWindow::detectResizeEdge(const QPoint &pos) const
 {
     const int margin = 8;
@@ -774,7 +857,7 @@ MainWindow::EdgeResize MainWindow::detectResizeEdge(const QPoint &pos) const
     bool right = pos.x() > width() - margin;
     bool top = pos.y() < margin;
     bool bottom = pos.y() > height() - margin;
-    
+
     if (top && left) return EdgeTopLeft;
     if (top && right) return EdgeTopRight;
     if (bottom && left) return EdgeBottomLeft;
@@ -816,7 +899,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         event->ignore();
         return;
     }
-    
+
     if (event->button() == Qt::LeftButton) {
         m_resizeEdge = detectResizeEdge(event->pos());
         if (m_resizeEdge != EdgeNone) {
@@ -837,11 +920,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         updateCursor(detectResizeEdge(event->pos()));
         return;
     }
-    
+
     if (m_resizing) {
         QPoint delta = event->globalPosition().toPoint() - m_resizeStartPos;
         QRect geom = m_resizeStartGeometry;
-        
+
         if (m_resizeEdge == EdgeLeft || m_resizeEdge == EdgeTopLeft || m_resizeEdge == EdgeBottomLeft)
             geom.setLeft(geom.left() + delta.x());
         if (m_resizeEdge == EdgeRight || m_resizeEdge == EdgeTopRight || m_resizeEdge == EdgeBottomRight)
@@ -850,8 +933,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             geom.setTop(geom.top() + delta.y());
         if (m_resizeEdge == EdgeBottom || m_resizeEdge == EdgeBottomLeft || m_resizeEdge == EdgeBottomRight)
             geom.setBottom(geom.bottom() + delta.y());
-        
-        if (geom.width() >= 300 && geom.height() >= 400) {
+
+        if (geom.width() >= 220 && geom.height() >= 300) {
             setGeometry(geom);
         }
         event->accept();
@@ -899,8 +982,6 @@ void MainWindow::wheelEvent(QWheelEvent *event)
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-    // 窗口大小变化时重新应用样式，使字体大小能够随窗口大小变化而变化
-    // 避免无限递归，只在窗口大小真正变化时才应用样式
     static QSize lastSize;
     if (size() != lastSize && m_config) {
         lastSize = size();
@@ -908,13 +989,13 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     }
 }
 
+// ===== Todo =====
 void MainWindow::onAddTodoClicked()
 {
     AddTodoDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         TodoItem item = dialog.getTodoItem();
         m_todoWidget->addTodoItem(item);
-        // 保存到配置
         if (m_config) {
             m_config->setTodoItems(m_todoWidget->todoItems());
         }
@@ -923,7 +1004,6 @@ void MainWindow::onAddTodoClicked()
 
 void MainWindow::onTodoItemClicked(int index)
 {
-    // 编辑代办事项
     QList<TodoItem> items = m_todoWidget->todoItems();
     if (index >= 0 && index < items.size()) {
         AddTodoDialog dialog(this);
@@ -931,7 +1011,6 @@ void MainWindow::onTodoItemClicked(int index)
         if (dialog.exec() == QDialog::Accepted) {
             TodoItem updatedItem = dialog.getTodoItem();
             m_todoWidget->updateTodoItem(index, updatedItem);
-            // 保存到配置
             if (m_config) {
                 m_config->setTodoItems(m_todoWidget->todoItems());
             }
@@ -941,10 +1020,8 @@ void MainWindow::onTodoItemClicked(int index)
 
 void MainWindow::onTodoItemCompleted(int index, bool completed)
 {
-    // 可以在这里添加完成代办事项的逻辑，比如播放提示音等
     Q_UNUSED(index);
     Q_UNUSED(completed);
-    // 保存到配置
     if (m_config) {
         m_config->setTodoItems(m_todoWidget->todoItems());
     }
@@ -953,7 +1030,6 @@ void MainWindow::onTodoItemCompleted(int index, bool completed)
 void MainWindow::onTodoHeightChanged(int newHeight)
 {
     Q_UNUSED(newHeight);
-    // ✅ 添加延迟，确保所有 deleteLater 执行完毕
     QTimer::singleShot(10, this, [this]() {
         if (m_config) {
             adjustSize();
@@ -961,31 +1037,37 @@ void MainWindow::onTodoHeightChanged(int newHeight)
     });
 }
 
+void MainWindow::enableSmartTheme(bool enabled)
+{
+    m_smartThemeEnabled = enabled;
+    if (m_smartThemeTimer) {
+        if (enabled) {
+            m_smartThemeTimer->start(300000); // 5分钟
+        } else {
+            m_smartThemeTimer->stop();
+        }
+    }
+}
+
 MainWindow::~MainWindow()
 {
-    // 释放动态分配的资源
+    if (m_smartThemeTimer) {
+        m_smartThemeTimer->stop();
+        delete m_smartThemeTimer;
+    }
     if (m_raiseTimer) {
         m_raiseTimer->stop();
         delete m_raiseTimer;
-        m_raiseTimer = nullptr;
     }
-    
     if (m_timer) {
         m_timer->stop();
         delete m_timer;
-        m_timer = nullptr;
     }
-    
     if (m_globalShortcut) {
         delete m_globalShortcut;
-        m_globalShortcut = nullptr;
     }
-    
     if (m_trayIcon) {
         m_trayIcon->hide();
         delete m_trayIcon;
-        m_trayIcon = nullptr;
     }
-    
-    // 其他控件由Qt的对象树管理，会自动释放
 }

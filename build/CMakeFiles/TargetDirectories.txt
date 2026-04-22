@@ -1,0 +1,5 @@
+/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/SmartDeskClock.dir
+/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/edit_cache.dir
+/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/rebuild_cache.dir
+/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/SmartDeskClock_autogen_timestamp_deps.dir
+/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/SmartDeskClock_autogen.dir

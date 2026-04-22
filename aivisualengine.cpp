@@ -19,82 +19,82 @@ AIVisualEngine::AIVisualEngine(QObject *parent) : QObject(parent)
 
 void AIVisualEngine::loadScript(const QString &jsonString)
 {
-    qDebug() << "AIVisualEngine::loadScript(QString) 开始";
+
     if (jsonString.isEmpty()) {
-        qDebug() << "JSON为空，调用reset()";
+
         reset();
         // 确保即使JSON为空，也能正确初始化所有成员变量
         m_physics = QJsonObject();
         m_colors = QJsonObject();
         m_maxParticles = 20;
         m_shapeType = "circle";
-        qDebug() << "JSON为空处理完成";
+
         return;
     }
     
-    qDebug() << "解析JSON字符串";
+
     QJsonDocument doc = QJsonDocument::fromJson(jsonString.toUtf8());
     if (!doc.isNull() && doc.isObject()) {
-        qDebug() << "JSON解析成功，调用loadScript(QJsonObject)";
+
         loadScript(doc.object());
-        qDebug() << "loadScript(QJsonObject) 调用完成";
+
     } else {
-        qDebug() << "JSON解析失败，调用reset()";
+
         reset();
         // 确保即使JSON解析失败，也能正确初始化所有成员变量
         m_physics = QJsonObject();
         m_colors = QJsonObject();
         m_maxParticles = 20;
         m_shapeType = "circle";
-        qDebug() << "JSON解析失败处理完成";
+
     }
-    qDebug() << "AIVisualEngine::loadScript(QString) 结束";
+
 }
 
 void AIVisualEngine::loadScript(const QJsonObject &obj)
 {
-    qDebug() << "AIVisualEngine::loadScript(QJsonObject) 开始";
+
     m_script = obj;
-    qDebug() << "调用reset()";
+
     reset();
     
     // 确保即使JSON缺少字段，也能正确初始化所有成员变量
-    qDebug() << "获取emitter对象";
+
     QJsonObject emitter = m_script["emitter"].toObject();
-    qDebug() << "获取max_count";
+
     m_maxParticles = emitter["max_count"].toInt(20);
-    qDebug() << "获取shape";
+
     m_shapeType = emitter["shape"].toString("circle");
-    qDebug() << "获取physics";
+
     m_physics = m_script["physics"].toObject();
-    qDebug() << "获取colors";
+
     m_colors = m_script["colors"].toObject();
     
     // 确保physics和colors至少是空对象，避免后续使用时出现问题
-    qDebug() << "检查physics是否为空";
+
     if (m_physics.isEmpty()) {
         m_physics = QJsonObject();
-        qDebug() << "physics为空，设置为空对象";
+
     }
-    qDebug() << "检查colors是否为空";
+
     if (m_colors.isEmpty()) {
         m_colors = QJsonObject();
-        qDebug() << "colors为空，设置为空对象";
+
     }
-    qDebug() << "AIVisualEngine::loadScript(QJsonObject) 结束";
+
 }
 
 void AIVisualEngine::reset()
 {
-    qDebug() << "AIVisualEngine::reset 开始";
+
     m_particles.clear();
     m_timeMs = 0;
-    qDebug() << "AIVisualEngine::reset 结束";
+
 }
 
 void AIVisualEngine::render(QPainter *painter, const QRect &rect, qreal timeMs)
 {
-    qDebug() << "AIVisualEngine::render 开始";
+
     qreal dt = (timeMs - m_timeMs) / 1000.0;
     if (dt <= 0 || dt > 0.1) dt = 0.016;
     m_timeMs = timeMs;
@@ -102,7 +102,7 @@ void AIVisualEngine::render(QPainter *painter, const QRect &rect, qreal timeMs)
     qreal currentTime = timeMs / 1000.0;
     
     // 全局变量
-    qDebug() << "清除并设置全局变量";
+
     m_globals.clear();
     m_globals["time"] = currentTime;
     m_globals["width"] = rect.width();
@@ -110,48 +110,48 @@ void AIVisualEngine::render(QPainter *painter, const QRect &rect, qreal timeMs)
     m_globals["center_x"] = rect.center().x();
     m_globals["center_y"] = rect.center().y();
     
-    qDebug() << "调用 updateParticles";
+
     updateParticles(rect, dt, currentTime);
-    qDebug() << "updateParticles 调用完成";
+
     
-    qDebug() << "调用 spawnParticles";
+
     spawnParticles(rect, currentTime);
-    qDebug() << "spawnParticles 调用完成";
+
     
     // 按Y排序
-    qDebug() << "按Y排序粒子";
+
     QList<Particle> sorted = m_particles;
     std::sort(sorted.begin(), sorted.end(), [](const Particle &a, const Particle &b) {
         return a.y < b.y;
     });
     
-    qDebug() << "渲染粒子，数量:" << sorted.size();
+
     for (const auto &p : sorted) {
         if (!p.isDead(currentTime)) {
-            qDebug() << "渲染粒子:" << &p;
+
             renderParticle(painter, p, currentTime);
         }
     }
-    qDebug() << "AIVisualEngine::render 结束";
+
 }
 
 void AIVisualEngine::updateParticles(const QRect &rect, qreal dt, qreal currentTime)
 {
-    qDebug() << "AIVisualEngine::updateParticles 开始";
+
     // 解析物理参数，确保即使m_physics为空也能正常工作
     qreal gravity = 9.8;
     qreal windX = 0;
     qreal windY = 0;
     
     if (!m_physics.isEmpty()) {
-        qDebug() << "解析物理参数";
+
         gravity = evalNumber(m_physics["gravity"].toString("9.8"), m_globals, 9.8);
         windX = evalNumber(m_physics["wind_x"].toString("0"), m_globals, 0);
         windY = evalNumber(m_physics["wind_y"].toString("0"), m_globals, 0);
-        qDebug() << "物理参数解析完成: gravity=" << gravity << " windX=" << windX << " windY=" << windY;
+
     }
     
-    qDebug() << "更新粒子，数量:" << m_particles.size();
+
     for (auto &p : m_particles) {
         // 飘动
         p.swayPhase += p.swaySpeed * dt;
@@ -174,20 +174,20 @@ void AIVisualEngine::updateParticles(const QRect &rect, qreal dt, qreal currentT
     }
     
     // 清理
-    qDebug() << "清理死亡粒子";
+
     m_particles.erase(std::remove_if(m_particles.begin(), m_particles.end(),
         [currentTime](const Particle &p) { return p.isDead(currentTime); }),
         m_particles.end());
-    qDebug() << "清理完成，剩余粒子数量:" << m_particles.size();
-    qDebug() << "AIVisualEngine::updateParticles 结束";
+
+
 }
 
 void AIVisualEngine::spawnParticles(const QRect &rect, qreal currentTime)
 {
-    qDebug() << "AIVisualEngine::spawnParticles 开始";
-    qDebug() << "当前粒子数量:" << m_particles.size() << "最大粒子数量:" << m_maxParticles;
+
+
     while (m_particles.size() < m_maxParticles) {
-        qDebug() << "生成新粒子";
+
         Particle p;
         p.birthTime = currentTime;
         p.lifeSpan = 999999;
@@ -212,7 +212,7 @@ void AIVisualEngine::spawnParticles(const QRect &rect, qreal currentTime)
         
         p.shapeType = m_shapeType;
         // 确保即使m_colors为空也能正常工作
-        qDebug() << "设置粒子颜色";
+
         QString primaryColor = "#ffffff";
         QString secondaryColor = "#cccccc";
         if (!m_colors.isEmpty()) {
@@ -230,47 +230,47 @@ void AIVisualEngine::spawnParticles(const QRect &rect, qreal currentTime)
             qBound(0, p.color.blue() + v, 255)
         );
         
-        qDebug() << "添加粒子到列表";
+
         m_particles.append(p);
-        qDebug() << "粒子添加完成，当前数量:" << m_particles.size();
+
     }
-    qDebug() << "AIVisualEngine::spawnParticles 结束";
+
 }
 
 void AIVisualEngine::renderParticle(QPainter *painter, const Particle &p, qreal currentTime)
 {
-    qDebug() << "AIVisualEngine::renderParticle 开始，形状:" << p.shapeType;
+
     painter->save();
-    qDebug() << "设置变换矩阵";
+
     painter->translate(p.x, p.y);
     painter->rotate(p.rotation);
     painter->scale(p.scale, p.scale);
     painter->setOpacity(p.alpha);
     
-    qDebug() << "根据形状绘制粒子";
+
     if (p.shapeType == "petal") {
-        qDebug() << "绘制花瓣";
+
         drawPetal(painter, p);
     } else if (p.shapeType == "snowflake") {
-        qDebug() << "绘制雪花";
+
         drawSnowflake(painter, p);
     } else if (p.shapeType == "maple") {
-        qDebug() << "绘制枫叶";
+
         drawMaple(painter, p);
     } else if (p.shapeType == "ginkgo") {
-        qDebug() << "绘制银杏叶";
+
         drawGinkgo(painter, p);
     } else if (p.shapeType == "geometric") {
-        qDebug() << "绘制几何形状";
+
         drawGeometric(painter, p);
     } else {
-        qDebug() << "绘制圆形";
+
         drawCircle(painter, p);
     }
     
-    qDebug() << "恢复painter状态";
+
     painter->restore();
-    qDebug() << "AIVisualEngine::renderParticle 结束";
+
 }
 
 void AIVisualEngine::drawPetal(QPainter *p, const Particle &particle)
