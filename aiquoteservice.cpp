@@ -163,14 +163,33 @@ void AIQuoteService::fetchQuote()
     QString timeDesc = (hour >= 6 && hour < 18) ? "白天" : "夜晚";
     
     // 修改提示词，生成古诗或词中的名句，去掉英文翻译
+    // 头文件中定义
+    const QStringList g_quoteThemes = {
+        "存在主义与生命意义",
+        "自然与时间的流逝", 
+        "孤独与陪伴",
+        "理想与现实的冲突",
+        "科技与人性",
+        "失败与 resilience",
+        "爱情的不同形态",
+        "死亡与永恒",
+        "自由与责任",
+        "东方美学与留白"
+    };
+
+    // 请求时随机选主题
+    QString theme = g_quoteThemes[QRandomGenerator::global()->bounded(g_quoteThemes.size())];
+
     QString systemPrompt = QString(
-        "你是中国古典文学专家。请从中国古代诗词中选取一句名句，要求："  
-        "1. 具有深刻的哲理或优美的意境"  
-        "2. 中文18字以内"  
-        "3. 注明诗词的出处（作者和作品名称）"  
-        "必须严格按以下JSON格式返回，不要任何其他内容：\n"  
-        "{\"chinese\": \"名句\", \"source\": \"作者 - 作品名称\", \"emotion\": \"happy/sad/calm/energetic\"}"
-    );
+        "你是文学策展人。今日主题是：【%1】。"
+        "请从世界文学、哲学、历史、影视中选取一句与此主题相关、但角度独特的名言。"
+        "要求："
+        "1. 中文18字以内"
+        "2. 注明出处"
+        "3. 优先选择非中文古典诗词的来源（70%概率），可接受冷门中国古诗词（30%概率）"
+        "4. 绝对禁止重复之前出现过的任何句子"
+        "按JSON返回：{\"chinese\": \"...\", \"source\": \"...\", \"emotion\": \"...\"}"
+    ).arg(theme);
 
     QJsonObject systemMsg;
     systemMsg["role"] = "user";
@@ -182,7 +201,7 @@ void AIQuoteService::fetchQuote()
     QJsonObject json;
     json["model"] = getModelForCurrentProvider();
     json["messages"] = messages;
-    json["temperature"] = 0.8;
+    json["temperature"] = 1.0;
     json["max_tokens"] = 150;
 
     QByteArray postData = QJsonDocument(json).toJson();

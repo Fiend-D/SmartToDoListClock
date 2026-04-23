@@ -91,3 +91,10 @@
 4	45	1776850574361283421	/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/mocs_compilation.cpp	12014e1f832b65aa
 47	2702	1776850577017207093	CMakeFiles/SmartDeskClock.dir/mainwindow.cpp.o	851d600c02b53609
 2702	3221	1776850577532603691	SmartDeskClock	7c51477047a4d35f
+9	50	1776938516363083500	SmartDeskClock_autogen/timestamp	12014e1f832b65aa
+9	50	1776938516363083500	SmartDeskClock_autogen/mocs_compilation.cpp	12014e1f832b65aa
+9	50	1776938516363083500	/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/timestamp	12014e1f832b65aa
+9	50	1776938516363083500	/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/mocs_compilation.cpp	12014e1f832b65aa
+51	2167	1776938518479685309	CMakeFiles/SmartDeskClock.dir/aiquoteservice.cpp.o	af5d27ac6b411785
+52	2360	1776938518672395712	CMakeFiles/SmartDeskClock.dir/todowidget.cpp.o	1ac0f2d845cf27e9
+2360	2964	1776938519270718905	SmartDeskClock	7c51477047a4d35f
