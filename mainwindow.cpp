@@ -289,19 +289,19 @@ void MainWindow::setupTray()
 
     QMenu *menu = new QMenu(this);
 
-    QAction *lockAction = menu->addAction("锁定🔒[L]", this, &MainWindow::toggleLock);
+    QAction *lockAction = menu->addAction("锁定", this, &MainWindow::toggleLock);
     lockAction->setCheckable(true);
     connect(this, &MainWindow::lockChanged, [lockAction](bool locked) {
         lockAction->setChecked(locked);
     });
 
-    QMenu *layerMenu = menu->addMenu("层级📌[T]");
+    QMenu *layerMenu = menu->addMenu("层级");
     QActionGroup *layerGroup = new QActionGroup(this);
     layerGroup->setExclusive(true);
 
-    QAction *topAct = layerMenu->addAction("[顶] 置顶", [this]() { setWindowLayer("top"); });
-    QAction *normAct = layerMenu->addAction("[普] 普通", [this]() { setWindowLayer("normal"); });
-    QAction *botAct = layerMenu->addAction("[底] 底层", [this]() { setWindowLayer("bottom"); });
+    QAction *topAct = layerMenu->addAction("置顶", [this]() { setWindowLayer("top"); });
+    QAction *normAct = layerMenu->addAction("普通", [this]() { setWindowLayer("normal"); });
+    QAction *botAct = layerMenu->addAction("底层", [this]() { setWindowLayer("bottom"); });
 
     layerGroup->addAction(topAct);
     layerGroup->addAction(normAct);
@@ -326,32 +326,32 @@ void MainWindow::setupTray()
     menu->addSeparator();
 
     // 智能主题开关
-    QAction *smartThemeAction = menu->addAction("智能主题🌅");
+    QAction *smartThemeAction = menu->addAction("智能主题");
     smartThemeAction->setCheckable(true);
     smartThemeAction->setChecked(m_smartThemeEnabled);
     connect(smartThemeAction, &QAction::toggled, this, &MainWindow::onSmartThemeToggled);
 
     menu->addSeparator();
 
-    QMenu *styleMenu = menu->addMenu("样式🎨[S]");
+    QMenu *styleMenu = menu->addMenu("样式");
     styleMenu->addAction("选择样式...", this, &MainWindow::showStyleSelector);
-    QMenu *aiMenu = styleMenu->addMenu("AI设计师🤖");
-    aiMenu->addAction("随机创造🎲", this, &MainWindow::startGenerateAIStyle);
-    aiMenu->addAction("描述生成📝...", this, &MainWindow::generateWithPrompt);
+    QMenu *aiMenu = styleMenu->addMenu("AI设计师");
+    aiMenu->addAction("随机创造", this, &MainWindow::startGenerateAIStyle);
+    aiMenu->addAction("描述生成...", this, &MainWindow::generateWithPrompt);
 
-    QMenu *providerMenu = menu->addMenu("🤖 AI提供商");
+    QMenu *providerMenu = menu->addMenu("AI提供商");
     providerMenu->addAction("智谱AI", [this]() { switchProvider("zhipu"); });
     providerMenu->addAction("Kimi", [this]() { switchProvider("kimi"); });
     providerMenu->addAction("硅基流动", [this]() { switchProvider("siliconflow"); });
     providerMenu->addAction("Ollama本地", [this]() { switchProvider("ollama"); });
 
     menu->addSeparator();
-    menu->addAction("刷新语录🔄[R]", [this]() { if (m_aiService) m_aiService->fetchQuote(); });
-    menu->addAction("刷新天气🔄", [this]() { if (m_weatherWidget) m_weatherWidget->updateWeather(); });
+    menu->addAction("刷新语录", [this]() { if (m_aiService) m_aiService->fetchQuote(); });
+    menu->addAction("刷新天气", [this]() { if (m_weatherWidget) m_weatherWidget->updateWeather(); });
 
     menu->addSeparator();
-    menu->addAction("显示/隐藏👁️[H]", this, &MainWindow::toggleVisibility);
-    menu->addAction("退出❌[Q]", this, &QWidget::close);
+    menu->addAction("显示/隐藏", this, &MainWindow::toggleVisibility);
+    menu->addAction("退出", this, &QWidget::close);
 
     m_trayIcon->setContextMenu(menu);
     m_trayIcon->show();
@@ -829,14 +829,14 @@ void MainWindow::paintEvent(QPaintEvent *)
     painter.drawRoundedRect(rect().adjusted(12, 12, -12, -12), 18, 18);
 
     // 锁定边框
-    int penWidth = m_locked ? 2 : 0;
-    if (penWidth > 0) {
-        QColor borderColor = m_locked ? QColor(255, 100, 100) : style.hourHandColor;
-        borderColor.setAlpha(120);
-        painter.setPen(QPen(borderColor, penWidth));
-        painter.setBrush(Qt::NoBrush);
-        painter.drawRoundedRect(rect().adjusted(6, 6, -6, -6), 20, 20);
-    }
+    // int penWidth = m_locked ? 2 : 0;
+    // if (penWidth > 0) {
+    //     QColor borderColor = m_locked ? QColor(255, 100, 100) : style.hourHandColor;
+    //     borderColor.setAlpha(120);
+    //     painter.setPen(QPen(borderColor, penWidth));
+    //     painter.setBrush(Qt::NoBrush);
+    //     painter.drawRoundedRect(rect().adjusted(6, 6, -6, -6), 20, 20);
+    // }
 
     if (m_locked) {
         painter.setPen(Qt::white);

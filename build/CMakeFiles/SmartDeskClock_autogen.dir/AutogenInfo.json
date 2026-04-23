@@ -1,16 +1,69 @@
 {
-	"BUILD_DIR" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen",
-	"CMAKE_BINARY_DIR" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build",
-	"CMAKE_CURRENT_BINARY_DIR" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build",
-	"CMAKE_CURRENT_SOURCE_DIR" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock",
+	"BUILD_DIR" : "/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen",
+	"CMAKE_BINARY_DIR" : "/home/fiend/WorkSpace/qt/desktop_clock/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/fiend/WorkSpace/qt/desktop_clock/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/fiend/WorkSpace/qt/desktop_clock",
 	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
 	"CMAKE_LIST_FILES" : 
 	[
-		"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/CMakeLists.txt",
-		"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/3.28.3/CMakeSystem.cmake",
+		"/home/fiend/WorkSpace/qt/desktop_clock/CMakeLists.txt",
+		"/usr/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeSystem.cmake.in",
+		"/home/fiend/WorkSpace/qt/desktop_clock/build/CMakeFiles/3.28.3/CMakeSystem.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeNinjaFindMake.cmake",
 		"/usr/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake",
 		"/usr/share/cmake-3.28/Modules/Platform/Linux-Initialize.cmake",
-		"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/3.28.3/CMakeCXXCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeDetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Platform/Linux-Determine-CXX.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeCompilerIdDetection.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/ADSP-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/ARMCC-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/ARMClang-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/AppleClang-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompilerInternal.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Borland-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompilerInternal.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Cray-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/CrayClang-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Embarcadero-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Fujitsu-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/GHS-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/HP-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/IAR-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Intel-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/MSVC-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/NVHPC-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/NVIDIA-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/OrangeC-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/PGI-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/PathScale-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/SCO-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/TI-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Tasking-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/Watcom-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/XL-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeFindBinUtils.cmake",
+		"/usr/share/cmake-3.28/Modules/Compiler/GNU-FindBinUtils.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeCXXCompiler.cmake.in",
+		"/home/fiend/WorkSpace/qt/desktop_clock/build/CMakeFiles/3.28.3/CMakeCXXCompiler.cmake",
 		"/usr/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake",
 		"/usr/share/cmake-3.28/Modules/CMakeGenericSystem.cmake",
 		"/usr/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake",
@@ -24,6 +77,18 @@
 		"/usr/share/cmake-3.28/Modules/Platform/Linux-GNU-CXX.cmake",
 		"/usr/share/cmake-3.28/Modules/Platform/Linux-GNU.cmake",
 		"/usr/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeTestCXXCompiler.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeTestCompilerCommon.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeDetermineCompilerABI.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeParseImplicitIncludeInfo.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeParseImplicitLinkInfo.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeParseLibraryArchitecture.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeTestCompilerCommon.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp",
+		"/usr/share/cmake-3.28/Modules/CMakeDetermineCompileFeatures.cmake",
+		"/usr/share/cmake-3.28/Modules/Internal/FeatureTesting.cmake",
+		"/usr/share/cmake-3.28/Modules/CMakeCXXCompiler.cmake.in",
+		"/home/fiend/WorkSpace/qt/desktop_clock/build/CMakeFiles/3.28.3/CMakeCXXCompiler.cmake",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6ConfigVersion.cmake",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake",
@@ -192,87 +257,87 @@
 		"/usr/share/cmake-3.28/Modules/CheckFunctionExists.cmake",
 		"/usr/share/cmake-3.28/Modules/CheckLibraryExists.cmake"
 	],
-	"CMAKE_SOURCE_DIR" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock",
-	"DEP_FILE" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/deps",
+	"CMAKE_SOURCE_DIR" : "/home/fiend/WorkSpace/qt/desktop_clock",
+	"DEP_FILE" : "/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "SmartDeskClock_autogen/timestamp",
 	"HEADERS" : 
 	[
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/addtododialog.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/addtododialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_addtododialog.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aiquoteservice.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/aiquoteservice.h",
 			"Mu",
 			"EWIEGA46WW/moc_aiquoteservice.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aivisualengine.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/aivisualengine.h",
 			"Mu",
 			"EWIEGA46WW/moc_aivisualengine.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/clockwidget.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/clockwidget.h",
 			"Mu",
 			"EWIEGA46WW/moc_clockwidget.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/configmanager.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/configmanager.h",
 			"Mu",
 			"EWIEGA46WW/moc_configmanager.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/emotionanalyzer.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/emotionanalyzer.h",
 			"Mu",
 			"EWIEGA46WW/moc_emotionanalyzer.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/mainwindow.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/mainwindow.h",
 			"Mu",
 			"EWIEGA46WW/moc_mainwindow.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/neumorphism.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/neumorphism.h",
 			"Mu",
 			"EWIEGA46WW/moc_neumorphism.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todoitem.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/todoitem.h",
 			"Mu",
 			"EWIEGA46WW/moc_todoitem.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todowidget.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/todowidget.h",
 			"Mu",
 			"EWIEGA46WW/moc_todowidget.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/weatherwidget.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/weatherwidget.h",
 			"Mu",
 			"EWIEGA46WW/moc_weatherwidget.cpp",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/x11globalshortcut.h",
+			"/home/fiend/WorkSpace/qt/desktop_clock/x11globalshortcut.h",
 			"Mu",
 			"EWIEGA46WW/moc_x11globalshortcut.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/include",
-	"MOC_COMPILATION_FILE" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"QT_CORE_LIB",
@@ -323,76 +388,56 @@
 		"-c",
 		"/usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp"
 	],
-	"MOC_PREDEFS_FILE" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/moc_predefs.h",
+	"MOC_PREDEFS_FILE" : "/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/moc_predefs.h",
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
 	"PARALLEL" : 6,
-	"PARSE_CACHE_FILE" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/SmartDeskClock_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE" : "/home/fiend/WorkSpace/qt/desktop_clock/build/CMakeFiles/SmartDeskClock_autogen.dir/ParseCache.txt",
 	"QT_MOC_EXECUTABLE" : "/usr/lib/qt6/libexec/moc",
 	"QT_UIC_EXECUTABLE" : "",
 	"QT_VERSION_MAJOR" : 6,
 	"QT_VERSION_MINOR" : 4,
-	"SETTINGS_FILE" : "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/SmartDeskClock_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE" : "/home/fiend/WorkSpace/qt/desktop_clock/build/CMakeFiles/SmartDeskClock_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/addtododialog.cpp",
+			"/home/fiend/WorkSpace/qt/desktop_clock/addtododialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aiquoteservice.cpp",
+			"/home/fiend/WorkSpace/qt/desktop_clock/aiquoteservice.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aivisualengine.cpp",
+			"/home/fiend/WorkSpace/qt/desktop_clock/aivisualengine.cpp",
+			"Mu",
+			null
+		],
+		[ "/home/fiend/WorkSpace/qt/desktop_clock/clockwidget.cpp", "Mu", null ],
+		[
+			"/home/fiend/WorkSpace/qt/desktop_clock/configmanager.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/clockwidget.cpp",
+			"/home/fiend/WorkSpace/qt/desktop_clock/emotionanalyzer.cpp",
+			"Mu",
+			null
+		],
+		[ "/home/fiend/WorkSpace/qt/desktop_clock/main.cpp", "Mu", null ],
+		[ "/home/fiend/WorkSpace/qt/desktop_clock/mainwindow.cpp", "Mu", null ],
+		[ "/home/fiend/WorkSpace/qt/desktop_clock/todoitem.cpp", "Mu", null ],
+		[ "/home/fiend/WorkSpace/qt/desktop_clock/todowidget.cpp", "Mu", null ],
+		[
+			"/home/fiend/WorkSpace/qt/desktop_clock/weatherwidget.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/configmanager.cpp",
-			"Mu",
-			null
-		],
-		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/emotionanalyzer.cpp",
-			"Mu",
-			null
-		],
-		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/main.cpp",
-			"Mu",
-			null
-		],
-		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/mainwindow.cpp",
-			"Mu",
-			null
-		],
-		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todoitem.cpp",
-			"Mu",
-			null
-		],
-		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todowidget.cpp",
-			"Mu",
-			null
-		],
-		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/weatherwidget.cpp",
-			"Mu",
-			null
-		],
-		[
-			"/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/x11globalshortcut.cpp",
+			"/home/fiend/WorkSpace/qt/desktop_clock/x11globalshortcut.cpp",
 			"Mu",
 			null
 		]

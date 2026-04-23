@@ -1,32 +1,32 @@
 SmartDeskClock_autogen/timestamp: \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/CMakeLists.txt \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/addtododialog.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/addtododialog.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aiquoteservice.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aiquoteservice.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aivisualengine.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aivisualengine.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/3.28.3/CMakeCXXCompiler.cmake \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/CMakeFiles/3.28.3/CMakeSystem.cmake \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/moc_predefs.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/clockwidget.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/clockwidget.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/configmanager.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/configmanager.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/emotionanalyzer.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/emotionanalyzer.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/main.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/mainwindow.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/mainwindow.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/neumorphism.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todoitem.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todoitem.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todowidget.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todowidget.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/weatherwidget.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/weatherwidget.h \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/x11globalshortcut.cpp \
-	/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/x11globalshortcut.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/CMakeLists.txt \
+	/home/fiend/WorkSpace/qt/desktop_clock/addtododialog.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/addtododialog.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/aiquoteservice.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/aiquoteservice.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/aivisualengine.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/aivisualengine.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/build/CMakeFiles/3.28.3/CMakeCXXCompiler.cmake \
+	/home/fiend/WorkSpace/qt/desktop_clock/build/CMakeFiles/3.28.3/CMakeSystem.cmake \
+	/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/moc_predefs.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/clockwidget.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/clockwidget.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/configmanager.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/configmanager.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/emotionanalyzer.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/emotionanalyzer.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/main.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/mainwindow.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/mainwindow.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/neumorphism.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/todoitem.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/todoitem.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/todowidget.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/todowidget.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/weatherwidget.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/weatherwidget.h \
+	/home/fiend/WorkSpace/qt/desktop_clock/x11globalshortcut.cpp \
+	/home/fiend/WorkSpace/qt/desktop_clock/x11globalshortcut.h \
 	/usr/include/alloca.h \
 	/usr/include/asm-generic/errno-base.h \
 	/usr/include/asm-generic/errno.h \
@@ -646,23 +646,80 @@ SmartDeskClock_autogen/timestamp: \
 	/usr/lib/x86_64-linux-gnu/cmake/Qt6WidgetsTools/Qt6WidgetsToolsTargets-none.cmake \
 	/usr/lib/x86_64-linux-gnu/cmake/Qt6WidgetsTools/Qt6WidgetsToolsTargets.cmake \
 	/usr/lib/x86_64-linux-gnu/cmake/Qt6WidgetsTools/Qt6WidgetsToolsVersionlessTargets.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeCXXCompiler.cmake.in \
+	/usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp \
 	/usr/share/cmake-3.28/Modules/CMakeCXXInformation.cmake \
 	/usr/share/cmake-3.28/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake \
 	/usr/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeCompilerIdDetection.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeDetermineCXXCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeDetermineCompileFeatures.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeDetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeDetermineCompilerABI.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeDetermineCompilerId.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeDetermineSystem.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeFindBinUtils.cmake \
 	/usr/share/cmake-3.28/Modules/CMakeFindDependencyMacro.cmake \
 	/usr/share/cmake-3.28/Modules/CMakeGenericSystem.cmake \
 	/usr/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake \
 	/usr/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeNinjaFindMake.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeParseImplicitIncludeInfo.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeParseImplicitLinkInfo.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeParseLibraryArchitecture.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeSystem.cmake.in \
 	/usr/share/cmake-3.28/Modules/CMakeSystemSpecificInformation.cmake \
 	/usr/share/cmake-3.28/Modules/CMakeSystemSpecificInitialize.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeTestCXXCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/CMakeTestCompilerCommon.cmake \
 	/usr/share/cmake-3.28/Modules/CheckCXXCompilerFlag.cmake \
 	/usr/share/cmake-3.28/Modules/CheckCXXSourceCompiles.cmake \
 	/usr/share/cmake-3.28/Modules/CheckFunctionExists.cmake \
 	/usr/share/cmake-3.28/Modules/CheckIncludeFileCXX.cmake \
 	/usr/share/cmake-3.28/Modules/CheckLibraryExists.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/ADSP-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/ARMCC-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/ARMClang-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/AppleClang-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Borland-DetermineCompiler.cmake \
 	/usr/share/cmake-3.28/Modules/Compiler/CMakeCommonCompilerMacros.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Clang-DetermineCompilerInternal.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Comeau-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Cray-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/CrayClang-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Embarcadero-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Fujitsu-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/GHS-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake \
 	/usr/share/cmake-3.28/Modules/Compiler/GNU-CXX.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/GNU-FindBinUtils.cmake \
 	/usr/share/cmake-3.28/Modules/Compiler/GNU.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/HP-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/IAR-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Intel-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/MSVC-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/NVHPC-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/NVIDIA-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/OrangeC-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/PGI-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/PathScale-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/SCO-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/TI-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Tasking-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/Watcom-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/XL-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake \
+	/usr/share/cmake-3.28/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake \
 	/usr/share/cmake-3.28/Modules/FeatureSummary.cmake \
 	/usr/share/cmake-3.28/Modules/FindFontconfig.cmake \
 	/usr/share/cmake-3.28/Modules/FindFreetype.cmake \
@@ -677,7 +734,9 @@ SmartDeskClock_autogen/timestamp: \
 	/usr/share/cmake-3.28/Modules/Internal/CheckCompilerFlag.cmake \
 	/usr/share/cmake-3.28/Modules/Internal/CheckFlagCommonConfig.cmake \
 	/usr/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake \
+	/usr/share/cmake-3.28/Modules/Internal/FeatureTesting.cmake \
 	/usr/share/cmake-3.28/Modules/MacroAddFileDependencies.cmake \
+	/usr/share/cmake-3.28/Modules/Platform/Linux-Determine-CXX.cmake \
 	/usr/share/cmake-3.28/Modules/Platform/Linux-GNU-CXX.cmake \
 	/usr/share/cmake-3.28/Modules/Platform/Linux-GNU.cmake \
 	/usr/share/cmake-3.28/Modules/Platform/Linux-Initialize.cmake \

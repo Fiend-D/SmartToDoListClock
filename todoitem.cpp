@@ -91,7 +91,7 @@ TodoItem TodoItem::fromJson(const QJsonObject &json)
     TodoItem item;
     item.m_title = json["title"].toString();
     item.m_dueDate = QDateTime::fromString(json["dueDate"].toString(), Qt::ISODate);
-    item.m_color = QColor(json["color"].toString("#ffffff"));
+    item.m_color = QColor(json["color"].toString("#030303"));
     item.m_note = json["note"].toString();
     item.m_completed = json["completed"].toBool(false);
     item.m_priority = static_cast<Priority>(json["priority"].toInt(1));

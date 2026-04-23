@@ -52,7 +52,7 @@ void TodoWidget::setupUI()
         "border: 1px solid rgba(120, 120, 120, 0.4); "
         "border-radius: 8px; "
         "font-size: 13px; "
-        "color: rgba(150, 150, 150, 0.9); "
+        "color: rgba(214, 213, 213, 0.9); "
         "text-align: center; "
         "padding: 6px; "
         "min-height: 28px; "

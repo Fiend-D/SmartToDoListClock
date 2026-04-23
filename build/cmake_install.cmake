@@ -1,4 +1,4 @@
-# Install script for directory: /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock
+# Install script for directory: /home/fiend/WorkSpace/qt/desktop_clock
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/fiend/WorkSpace/qt/desktop_clock/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

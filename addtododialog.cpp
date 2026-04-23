@@ -27,8 +27,8 @@ void AddTodoDialog::setupUI()
     m_titleEdit->setPlaceholderText("输入待办事项标题...");
     m_titleEdit->setStyleSheet(
         "QLineEdit { padding: 6px; border: 1px solid rgba(120,120,120,0.4); border-radius: 6px; "
-        "background-color: rgba(255,255,255,0.05); color: #e0e0e0; }"
-        "QLineEdit:focus { border-color: rgba(150,150,150,0.7); }"
+        "background-color: rgba(255,255,255,0.05); color: #0c0a0a; }"
+        "QLineEdit:focus { border-color: rgba(2, 2, 2, 0.7); }"
     );
     formLayout->addRow("标题:", m_titleEdit);
 
@@ -38,23 +38,23 @@ void AddTodoDialog::setupUI()
     m_dueDateEdit->setDateTime(QDateTime::currentDateTime().addSecs(3600));
     m_dueDateEdit->setDisplayFormat("yyyy-MM-dd HH:mm");
     m_dueDateEdit->setStyleSheet(
-        "QDateTimeEdit { padding: 5px; border: 1px solid rgba(120,120,120,0.4); border-radius: 6px; "
-        "background-color: rgba(255,255,255,0.05); color: #e0e0e0; }"
+        "QDateTimeEdit { padding: 5px; border: 1px solid rgba(5, 5, 5, 0.4); border-radius: 6px; "
+        "background-color: rgba(255,255,255,0.05); color: #080707; }"
     );
     formLayout->addRow("截止时间:", m_dueDateEdit);
 
     // 优先级
     m_priorityCombo = new QComboBox(this);
-    m_priorityCombo->addItem("🔵 低", static_cast<int>(TodoItem::Low));
-    m_priorityCombo->addItem("🟡 中", static_cast<int>(TodoItem::Medium));
-    m_priorityCombo->addItem("🟠 高", static_cast<int>(TodoItem::High));
-    m_priorityCombo->addItem("🔴 紧急", static_cast<int>(TodoItem::Urgent));
+    m_priorityCombo->addItem("低", static_cast<int>(TodoItem::Low));
+    m_priorityCombo->addItem("中", static_cast<int>(TodoItem::Medium));
+    m_priorityCombo->addItem("高", static_cast<int>(TodoItem::High));
+    m_priorityCombo->addItem("紧急", static_cast<int>(TodoItem::Urgent));
     m_priorityCombo->setCurrentIndex(1);
     m_priorityCombo->setStyleSheet(
         "QComboBox { padding: 5px; border: 1px solid rgba(120,120,120,0.4); border-radius: 6px; "
-        "background-color: rgba(255,255,255,0.05); color: #e0e0e0; }"
+        "background-color: rgba(245, 245, 245, 0.05); color: #0a0909; }"
         "QComboBox::drop-down { border: none; }"
-        "QComboBox QAbstractItemView { background-color: #2d2d2d; color: #e0e0e0; selection-background-color: #404040; }"
+        "QComboBox QAbstractItemView { background-color: #c5c4c4; color: #b9b4b4; selection-background-color: #404040; }"
     );
     formLayout->addRow("优先级:", m_priorityCombo);
 
@@ -63,8 +63,8 @@ void AddTodoDialog::setupUI()
     m_categoryEdit->setPlaceholderText("工作 / 学习 / 生活...");
     m_categoryEdit->setStyleSheet(
         "QLineEdit { padding: 6px; border: 1px solid rgba(120,120,120,0.4); border-radius: 6px; "
-        "background-color: rgba(255,255,255,0.05); color: #e0e0e0; }"
-        "QLineEdit:focus { border-color: rgba(150,150,150,0.7); }"
+        "background-color: rgba(255,255,255,0.05); color: #050505; }"
+        "QLineEdit:focus { border-color: rgba(14, 13, 13, 0.7); }"
     );
     formLayout->addRow("分类:", m_categoryEdit);
 
@@ -72,7 +72,7 @@ void AddTodoDialog::setupUI()
 
     // 备注
     QLabel *noteLabel = new QLabel("备注:", this);
-    noteLabel->setStyleSheet("color: #b0b0b0;");
+    noteLabel->setStyleSheet("color: #070707;");
     m_layout->addWidget(noteLabel);
 
     m_noteEdit = new QTextEdit(this);
@@ -80,8 +80,8 @@ void AddTodoDialog::setupUI()
     m_noteEdit->setMaximumHeight(80);
     m_noteEdit->setStyleSheet(
         "QTextEdit { padding: 6px; border: 1px solid rgba(120,120,120,0.4); border-radius: 6px; "
-        "background-color: rgba(255,255,255,0.05); color: #e0e0e0; }"
-        "QTextEdit:focus { border-color: rgba(150,150,150,0.7); }"
+        "background-color: rgba(255,255,255,0.05); color: #070606; }"
+        "QTextEdit:focus { border-color: rgba(19, 17, 17, 0.7); }"
     );
     m_layout->addWidget(m_noteEdit);
 

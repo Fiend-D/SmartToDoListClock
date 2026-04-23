@@ -1,5 +1,5 @@
-/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/EWIEGA46WW/moc_x11globalshortcut.cpp: /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/x11globalshortcut.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/moc_predefs.h \
+/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/EWIEGA46WW/moc_x11globalshortcut.cpp: /home/fiend/WorkSpace/qt/desktop_clock/x11globalshortcut.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/moc_predefs.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \

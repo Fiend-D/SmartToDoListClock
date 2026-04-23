@@ -1,6 +1,6 @@
-/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/EWIEGA46WW/moc_addtododialog.cpp: /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/addtododialog.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/moc_predefs.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todoitem.h \
+/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/EWIEGA46WW/moc_addtododialog.cpp: /home/fiend/WorkSpace/qt/desktop_clock/addtododialog.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/moc_predefs.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/todoitem.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \

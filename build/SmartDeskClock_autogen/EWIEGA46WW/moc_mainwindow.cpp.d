@@ -1,13 +1,13 @@
-/home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/EWIEGA46WW/moc_mainwindow.cpp: /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/mainwindow.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/build/SmartDeskClock_autogen/moc_predefs.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/addtododialog.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/aiquoteservice.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/clockwidget.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/configmanager.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todoitem.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/todowidget.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/weatherwidget.h \
-  /home/zhaohaipeng/WorkSpacee/qt/smartClockNote/SmartToDoListClock/x11globalshortcut.h \
+/home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/EWIEGA46WW/moc_mainwindow.cpp: /home/fiend/WorkSpace/qt/desktop_clock/mainwindow.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/build/SmartDeskClock_autogen/moc_predefs.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/addtododialog.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/aiquoteservice.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/clockwidget.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/configmanager.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/todoitem.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/todowidget.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/weatherwidget.h \
+  /home/fiend/WorkSpace/qt/desktop_clock/x11globalshortcut.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
